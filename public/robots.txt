@@ -1,10 +1,14 @@
 User-agent: *
 Allow: /
 
-# Sitemap location
-Sitemap: https://yasas.dev/sitemap.xml
-
-# Disallow admin or private areas (if any)
+# Disallow crawling of internal or sensitive routes
 Disallow: /api/
 Disallow: /_next/
-Disallow: /admin/ 
+Disallow: /admin/
+
+# Bonus: prevent crawling if someone accesses this via ddsyasas.com (fallback)
+Disallow: https://ddsyasas.com/
+Disallow: https://www.ddsyasas.com/
+
+# Sitemap location
+Sitemap: https://yasas.dev/sitemap.xml
