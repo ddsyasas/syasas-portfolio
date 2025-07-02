@@ -19,6 +19,7 @@ export const metadata: Metadata = {
   keywords: ["Sajana Yasas", "Physics Researcher", "SEO Expert", "Full-stack Developer", "Material Physics", "IDER Solutions", "Portfolio"],
   authors: [{ name: "Sajana Yasas" }],
   creator: "Sajana Yasas",
+  viewport: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no",
   openGraph: {
     title: "Sajana Yasas - Physics Scholar | SEO Expert | Developer",
     description: "Personal portfolio of Sajana Yasas - Material Physics Researcher, SEO Expert at IDER Solutions, Full-stack Developer, and Indie Maker",

@@ -5,8 +5,8 @@ import { Linkedin, X, Facebook } from 'lucide-react';
 
 const Footer = () => {
   return (
-    <footer className="py-12 px-6 border-t border-border/50">
-      <div className="max-w-7xl mx-auto">
+    <footer className="py-12 px-6 border-t border-border/50 w-full">
+      <div className="max-w-7xl mx-auto w-full">
         <div className="grid md:grid-cols-4 gap-8">
           <div>
             <h3 className="text-xl font-bold text-foreground mb-4">Sajana Yasas</h3>
