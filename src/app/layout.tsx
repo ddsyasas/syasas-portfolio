@@ -58,9 +58,32 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        {/* Google Analytics */}
+        {GA_MEASUREMENT_ID && (
+          <>
+            <script
+              async
+              src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+            />
+            <script
+              dangerouslySetInnerHTML={{
+                __html: `
+                  window.dataLayer = window.dataLayer || [];
+                  function gtag(){dataLayer.push(arguments);}
+                  gtag('js', new Date());
+                  gtag('config', '${GA_MEASUREMENT_ID}');
+                `,
+              }}
+            />
+          </>
+        )}
+        
+        {/* Theme Script */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -92,9 +115,9 @@ export default function RootLayout({
           image="https://yasas.dev/Sajana-yasas-me.png"
           url="https://yasas.dev"
           sameAs={[
-            "https://linkedin.com/in/sajana-yasas",
+            "https://www.linkedin.com/in/ddsyasas/",
             "https://github.com/sajana-yasas",
-            "https://twitter.com/sajana_yasas"
+            "https://x.com/ddsyasas"
           ]}
         />
         <WebsiteStructuredData

@@ -48,13 +48,13 @@ const Footer = () => {
           <div>
             <h4 className="text-lg font-semibold text-foreground mb-4">Follow Me</h4>
             <div className="flex space-x-4">
-              <a href="#" className="bg-card p-3 rounded-lg hover:bg-blue-600 transition-all duration-300 hover:scale-110 hover:shadow-lg">
+              <a href="https://www.linkedin.com/in/ddsyasas/" target="_blank" rel="noopener noreferrer" className="bg-card p-3 rounded-lg hover:bg-blue-600 transition-all duration-300 hover:scale-110 hover:shadow-lg">
                 <Linkedin size={20} className="text-foreground" />
               </a>
-              <a href="#" className="bg-card p-3 rounded-lg hover:bg-blue-600 transition-all duration-300 hover:scale-110 hover:shadow-lg">
+              <a href="https://x.com/ddsyasas" target="_blank" rel="noopener noreferrer" className="bg-card p-3 rounded-lg hover:bg-blue-600 transition-all duration-300 hover:scale-110 hover:shadow-lg">
                 <X size={20} className="text-foreground" />
               </a>
-              <a href="#" className="bg-card p-3 rounded-lg hover:bg-blue-600 transition-all duration-300 hover:scale-110 hover:shadow-lg">
+              <a href="https://www.facebook.com/ddsyasas" target="_blank" rel="noopener noreferrer" className="bg-card p-3 rounded-lg hover:bg-blue-600 transition-all duration-300 hover:scale-110 hover:shadow-lg">
                 <Facebook size={20} className="text-foreground" />
               </a>
             </div>

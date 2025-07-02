@@ -6,6 +6,7 @@ import { Input } from './input';
 import { Textarea } from './textarea';
 import { Linkedin, X, Facebook } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { trackFormSubmission } from '@/lib/analytics';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -18,6 +19,10 @@ const Contact = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Track form submission
+    trackFormSubmission('contact_form');
+    
     toast({
       title: "Message Sent!",
       description: "Thank you for your message. I'll get back to you soon!",
@@ -103,13 +108,13 @@ const Contact = () => {
               </p>
               
               <div className="flex space-x-4">
-                <a href="#" className="bg-card p-3 rounded-lg hover:bg-blue-600 transition-all duration-300 hover:scale-110 hover:shadow-lg">
+                <a href="https://www.linkedin.com/in/ddsyasas/" target="_blank" rel="noopener noreferrer" className="bg-card p-3 rounded-lg hover:bg-blue-600 transition-all duration-300 hover:scale-110 hover:shadow-lg">
                   <Linkedin size={24} className="text-foreground" />
                 </a>
-                <a href="#" className="bg-card p-3 rounded-lg hover:bg-blue-600 transition-all duration-300 hover:scale-110 hover:shadow-lg">
+                <a href="https://x.com/ddsyasas" target="_blank" rel="noopener noreferrer" className="bg-card p-3 rounded-lg hover:bg-blue-600 transition-all duration-300 hover:scale-110 hover:shadow-lg">
                   <X size={24} className="text-foreground" />
                 </a>
-                <a href="#" className="bg-card p-3 rounded-lg hover:bg-blue-600 transition-all duration-300 hover:scale-110 hover:shadow-lg">
+                <a href="https://www.facebook.com/ddsyasas" target="_blank" rel="noopener noreferrer" className="bg-card p-3 rounded-lg hover:bg-blue-600 transition-all duration-300 hover:scale-110 hover:shadow-lg">
                   <Facebook size={24} className="text-foreground" />
                 </a>
               </div>
