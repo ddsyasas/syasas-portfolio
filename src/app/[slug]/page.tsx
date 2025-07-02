@@ -202,5 +202,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       description,
       images: [post.featuredImage?.node?.sourceUrl || '/Sajana-yasas-me.png'],
     },
+    alternates: {
+      canonical: `https://yasas.dev/${post.slug}`,
+    },
   };
 } 

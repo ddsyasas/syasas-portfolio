@@ -26,6 +26,9 @@ export const metadata: Metadata = {
     description: "Read my latest insights on SEO, Physics, Web Development, Technology, and more.",
     images: ["/Sajana-yasas-me.png"],
   },
+  alternates: {
+    canonical: 'https://yasas.dev/blog',
+  },
 };
 
 export default function Blog() {
