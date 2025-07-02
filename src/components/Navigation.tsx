@@ -18,7 +18,8 @@ const Navigation = () => {
     { name: 'About', href: '#about' },
     { name: 'Skills', href: '#skills' },
     { name: 'Qualifications', href: '#qualifications' },
-    { name: 'Portfolio', href: '#portfolio' },
+    // HIDDEN: Portfolio navigation item - Hidden until Portfolio section data is finalized
+    // { name: 'Portfolio', href: '#portfolio' },
     { name: 'Blog', href: '#blog' },
     { name: 'Contact', href: '#contact' }
   ];

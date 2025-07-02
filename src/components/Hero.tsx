@@ -55,14 +55,15 @@ const Hero = () => {
         </p>
         
         <nav className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8 sm:mb-0" aria-label="Primary navigation">
-          <motion.a
+          {/* HIDDEN: Portfolio button - Hidden until Portfolio section data is finalized */}
+          {/* <motion.a
             whileHover={{ scale: 1.05 }}
             href="#portfolio"
             className="relative z-10 inline-block px-8 py-3 text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-800 transition-colors min-w-[180px] text-center"
             aria-label="View my work portfolio"
           >
             View My Work
-          </motion.a>
+          </motion.a> */}
           <motion.a
             variants={tadaAnimation}
             initial="initial"

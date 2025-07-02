@@ -22,7 +22,8 @@ const Footer = () => {
               <li><a href="#about" className="text-muted-foreground hover:text-blue-400 transition-colors">About</a></li>
               <li><a href="#skills" className="text-muted-foreground hover:text-blue-400 transition-colors">Skills</a></li>
               <li><a href="#qualifications" className="text-muted-foreground hover:text-blue-400 transition-colors">Qualifications</a></li>
-              <li><a href="#portfolio" className="text-muted-foreground hover:text-blue-400 transition-colors">Portfolio</a></li>
+              {/* HIDDEN: Portfolio link - Hidden until Portfolio section data is finalized */}
+              {/* <li><a href="#portfolio" className="text-muted-foreground hover:text-blue-400 transition-colors">Portfolio</a></li> */}
               <li><a href="#blog" className="text-muted-foreground hover:text-blue-400 transition-colors">Blog</a></li>
               <li><a href="#contact" className="text-muted-foreground hover:text-blue-400 transition-colors">Contact</a></li>
               <li><a href="#" className="text-muted-foreground hover:text-blue-400 transition-colors">Privacy Policy</a></li>
