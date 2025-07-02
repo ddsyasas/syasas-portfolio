@@ -51,7 +51,7 @@ const About = () => {
           <div className="space-y-6">
             <div className="text-lg text-muted-foreground leading-relaxed space-y-4">
               <p>
-                Hello! I'm <span className="text-foreground font-semibold">Sajana Yasas</span> — a Material Physics researcher, SEO 
+                Hello! I&apos;m <span className="text-foreground font-semibold">Sajana Yasas</span> — a Material Physics researcher, SEO 
                 expert, and indie maker passionate about building the future of the 
                 web.
               </p>
@@ -65,14 +65,14 @@ const About = () => {
               </p>
               
               <p>
-                I'm also a self-driven developer — building websites, tools, and 
+                I&apos;m also a self-driven developer — building websites, tools, and 
                 digital experiences that solve real-world problems. My work spans 
                 from user-friendly <span className="text-foreground font-semibold">WordPress and Shopify</span> sites to custom-coded 
                 platforms using <span className="text-foreground font-semibold">JavaScript, Tailwind CSS, React, and Next.js</span>.
               </p>
               
               <p>
-                Whether it's launching a marketing site, developing a web app, or 
+                Whether it&apos;s launching a marketing site, developing a web app, or 
                 prototyping an indie product idea, I bring together <span className="text-foreground font-semibold">critical thinking, 
                 creative thinking, technical skill, and real-world impact</span>.
               </p>

@@ -41,7 +41,7 @@ const Contact = () => {
           </h2>
           <div className="w-16 h-1 bg-blue-600 mx-auto mb-8"></div>
           <p className="text-muted-foreground text-lg">
-            Let's discuss how I can help you achieve your digital marketing goals
+            Let&apos;s discuss how I can help you achieve your digital marketing goals
           </p>
         </div>
         

@@ -4,6 +4,54 @@ const WP_GRAPHQL_URL = process.env.NEXT_PUBLIC_WP_GRAPHQL_URL || 'https://cms.dd
 
 export const client = new GraphQLClient(WP_GRAPHQL_URL);
 
+interface Category {
+  id: string;
+  name: string;
+  slug: string;
+  count?: number;
+}
+
+interface Author {
+  node: {
+    name: string;
+    slug: string;
+  };
+}
+
+interface FeaturedImage {
+  node: {
+    sourceUrl: string;
+    altText: string;
+  } | null;
+}
+
+interface Post {
+  id: string;
+  title: string;
+  slug: string;
+  date: string;
+  excerpt: string;
+  content: string;
+  modified: string;
+  author: Author;
+  categories: { nodes: Category[] };
+  tags: { nodes: Category[] };
+  featuredImage: FeaturedImage;
+}
+
+interface PostsResponse {
+  posts: {
+    nodes: Post[];
+  };
+  categories: {
+    nodes: Category[];
+  };
+}
+
+interface PostResponse {
+  postBy: Post;
+}
+
 export const GET_POSTS_AND_CATEGORIES = gql`
   query GetPostsAndCategories {
     posts(first: 20) {
@@ -95,7 +143,7 @@ export const GET_POST_BY_SLUG = gql`
 `;
 
 export async function fetchPostsAndCategories() {
-  const data = await client.request(GET_POSTS_AND_CATEGORIES) as any;
+  const data = await client.request(GET_POSTS_AND_CATEGORIES) as PostsResponse;
   return {
     posts: data.posts.nodes,
     categories: data.categories.nodes,
@@ -103,6 +151,6 @@ export async function fetchPostsAndCategories() {
 }
 
 export async function fetchPostBySlug(slug: string) {
-  const data = await client.request(GET_POST_BY_SLUG, { slug }) as any;
+  const data = await client.request(GET_POST_BY_SLUG, { slug }) as PostResponse;
   return data.postBy;
 } 

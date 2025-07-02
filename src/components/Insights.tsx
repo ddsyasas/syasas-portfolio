@@ -11,7 +11,7 @@ interface Category {
   id: string;
   name: string;
   slug: string;
-  count: number;
+  count?: number;
 }
 
 interface Post {
@@ -33,18 +33,15 @@ interface Post {
 const Insights = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setError(null);
         setLoading(true);
         const { posts } = await fetchPostsAndCategories();
         setPosts(Array.isArray(posts) ? posts.slice(0, 3) : []); // Show only latest 3
-      } catch (error) {
-        setError('Failed to load insights');
+      } catch {
         setPosts([]);
       } finally {
         setLoading(false);
@@ -59,22 +56,6 @@ const Insights = () => {
         <div className="max-w-7xl mx-auto text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto"></div>
           <p className="mt-4 text-muted-foreground">Loading insights...</p>
-        </div>
-      </section>
-    );
-  }
-
-  if (error) {
-    return (
-      <section id="blog" className="py-20 px-6 bg-muted/50">
-        <div className="max-w-7xl mx-auto text-center">
-          <p className="text-red-500 text-lg mb-4">{error}</p>
-          <Button 
-            onClick={() => window.location.reload()}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg"
-          >
-            Try Again
-          </Button>
         </div>
       </section>
     );

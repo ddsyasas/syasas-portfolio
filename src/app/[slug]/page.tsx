@@ -16,9 +16,9 @@ interface Category {
 }
 
 interface BlogPostPageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
@@ -60,7 +60,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         publishedDate={post.date}
         modifiedDate={post.modified || post.date}
         author="Sajana Yasas"
-        categories={post.categories?.nodes?.map((cat: any) => cat.name) || []}
+        categories={post.categories?.nodes?.map((cat: Category) => cat.name) || []}
       />
       <Navigation />
       <main className="py-20 px-6">
@@ -152,7 +152,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   );
 }
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const post = await fetchPostBySlug(slug);
 
@@ -172,7 +172,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     title: `${post.title} - Sajana Yasas`,
     description,
     keywords: [
-      ...post.categories?.nodes?.map((cat: any) => cat.name) || [],
+      ...post.categories?.nodes?.map((cat: Category) => cat.name) || [],
       'Sajana Yasas',
       'Blog',
       'Physics',

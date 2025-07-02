@@ -1,7 +1,6 @@
 "use client";
 
 import React from 'react';
-import { Button } from './button';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 
@@ -48,7 +47,7 @@ const Hero = () => {
         </p>
         
         <p className="text-muted-foreground text-lg max-w-3xl mx-auto mb-10 leading-relaxed">
-          I'm a material physics researcher exploring the science of tomorrow, 
+          I&apos;m a material physics researcher exploring the science of tomorrow, 
           an SEO expert at IDER Solutions helping brands dominate search, a 
           full-stack developer building web sites and web apps, and an indie 
           maker creating tools that fill digital market gaps.
@@ -73,7 +72,7 @@ const Hero = () => {
             className="relative z-10 inline-block px-8 py-3 text-base font-medium rounded-md text-foreground bg-card hover:bg-accent active:bg-accent/80 border border-border transition-all duration-300 min-w-[180px] text-center shadow-lg hover:shadow-xl shadow-black/10 hover:shadow-black/20"
             aria-label="Contact me"
           >
-            Let's Chat
+            Let&apos;s Chat
           </motion.a>
         </nav>
       </div>

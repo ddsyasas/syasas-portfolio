@@ -11,7 +11,7 @@ interface Category {
   id: string;
   name: string;
   slug: string;
-  count: number;
+  count?: number;
 }
 
 interface Post {
@@ -36,18 +36,15 @@ const BlogSection = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setError(null);
         setLoading(true);
         const { posts, categories } = await fetchPostsAndCategories();
         setPosts(Array.isArray(posts) ? posts : []);
         setCategories(Array.isArray(categories) ? categories : []);
-      } catch (error) {
-        setError('Failed to load blog posts');
+      } catch {
         setPosts([]);
         setCategories([]);
       } finally {
@@ -82,35 +79,12 @@ const BlogSection = () => {
       'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=400&h=250&fit=crop';
   };
 
-  const getReadTime = (content: string) => {
-    const wordsPerMinute = 200;
-    const wordCount = content.replace(/<[^>]*>/g, '').split(' ').length;
-    const minutes = Math.ceil(wordCount / wordsPerMinute);
-    return `${minutes} min read`;
-  };
-
   if (loading) {
     return (
       <section className="py-20 px-6 bg-muted/50">
         <div className="max-w-7xl mx-auto text-center">
           <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto"></div>
           <p className="mt-4 text-muted-foreground">Loading blog posts...</p>
-        </div>
-      </section>
-    );
-  }
-
-  if (error) {
-    return (
-      <section className="py-20 px-6 bg-muted/50">
-        <div className="max-w-7xl mx-auto text-center">
-          <p className="text-red-500 text-lg mb-4">{error}</p>
-          <Button 
-            onClick={() => window.location.reload()}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg"
-          >
-            Try Again
-          </Button>
         </div>
       </section>
     );
@@ -212,7 +186,7 @@ const BlogSection = () => {
         {!hasMoreCards && filteredPosts.length > 0 && (
           <div className="text-center">
             <p className="text-muted-foreground text-lg">
-              You've reached the end! All {filteredPosts.length} posts are displayed.
+              You&apos;ve reached the end! All {filteredPosts.length} posts are displayed.
             </p>
           </div>
         )}

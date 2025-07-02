@@ -20,24 +20,6 @@ const Qualifications = () => {
     }
   ];
 
-  const certifications = [
-    {
-      title: "Google Analytics Certification",
-      institution: "Google",
-      year: "2023"
-    },
-    {
-      title: "SEO Certification",
-      institution: "HubSpot Academy",
-      year: "2023"
-    },
-    {
-      title: "Digital Marketing Specialization",
-      institution: "Coursera",
-      year: "2022"
-    }
-  ];
-
   return (
     <section id="qualifications" className="py-20 px-6">
       <div className="max-w-7xl mx-auto">
