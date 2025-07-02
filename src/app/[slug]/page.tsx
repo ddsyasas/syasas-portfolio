@@ -6,6 +6,8 @@ import ShareButtons from '@/components/ShareButtons';
 import TableOfContents from '@/components/TableOfContents';
 import { Calendar, Clock, User, Tag } from 'lucide-react';
 import { stripHtml, injectHeadingIds } from '@/lib/utils';
+import type { Metadata } from 'next';
+import ArticleStructuredData from '@/components/ArticleStructuredData';
 
 interface Category {
   id: string;
@@ -50,6 +52,16 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   return (
     <div className="min-h-screen bg-background">
+      <ArticleStructuredData
+        title={post.title}
+        description={stripHtml(post.content).substring(0, 160)}
+        image={featuredImage}
+        url={`https://yasas.dev/${post.slug}`}
+        publishedDate={post.date}
+        modifiedDate={post.modified || post.date}
+        author="Sajana Yasas"
+        categories={post.categories?.nodes?.map((cat: any) => cat.name) || []}
+      />
       <Navigation />
       <main className="py-20 px-6">
         <article className="max-w-4xl mx-auto">
@@ -132,10 +144,63 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           )}
 
           {/* Share Section */}
-          <ShareButtons title={post.title} url={`https://cms.ddsyasas.com/${post.slug}`} />
+          <ShareButtons title={post.title} url={`https://yasas.dev/${post.slug}`} />
         </article>
       </main>
       <Footer />
     </div>
   );
+}
+
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+  const { slug } = await params;
+  const post = await fetchPostBySlug(slug);
+
+  if (!post) {
+    return {
+      title: 'Post Not Found - Sajana Yasas',
+      description: 'The requested blog post could not be found.',
+    };
+  }
+
+  const strippedContent = stripHtml(post.content);
+  const description = strippedContent.length > 160 
+    ? strippedContent.substring(0, 157) + '...' 
+    : strippedContent;
+
+  return {
+    title: `${post.title} - Sajana Yasas`,
+    description,
+    keywords: [
+      ...post.categories?.nodes?.map((cat: any) => cat.name) || [],
+      'Sajana Yasas',
+      'Blog',
+      'Physics',
+      'SEO',
+      'Web Development'
+    ],
+    openGraph: {
+      title: post.title,
+      description,
+      type: 'article',
+      url: `https://yasas.dev/${post.slug}`,
+      images: [
+        {
+          url: post.featuredImage?.node?.sourceUrl || '/Sajana-yasas-me.png',
+          width: 1200,
+          height: 630,
+          alt: post.title,
+        },
+      ],
+      publishedTime: post.date,
+      modifiedTime: post.modified,
+      authors: ['Sajana Yasas'],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.title,
+      description,
+      images: [post.featuredImage?.node?.sourceUrl || '/Sajana-yasas-me.png'],
+    },
+  };
 } 

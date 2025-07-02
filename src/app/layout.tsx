@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import PersonStructuredData, { WebsiteStructuredData } from "@/components/StructuredData";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -81,6 +82,23 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         suppressHydrationWarning={true}
       >
+        <PersonStructuredData
+          name="Sajana Yasas"
+          jobTitle="Material Physics Researcher | SEO Expert | Full-stack Developer"
+          description="Personal portfolio of Sajana Yasas - Material Physics Researcher, SEO Expert at IDER Solutions, Full-stack Developer, and Indie Maker"
+          image="https://yasas.dev/Sajana-yasas-me.png"
+          url="https://yasas.dev"
+          sameAs={[
+            "https://linkedin.com/in/sajana-yasas",
+            "https://github.com/sajana-yasas",
+            "https://twitter.com/sajana_yasas"
+          ]}
+        />
+        <WebsiteStructuredData
+          name="Sajana Yasas - Portfolio"
+          description="Personal portfolio of Sajana Yasas - Material Physics Researcher, SEO Expert at IDER Solutions, Full-stack Developer, and Indie Maker"
+          url="https://yasas.dev"
+        />
         {children}
       </body>
     </html>
