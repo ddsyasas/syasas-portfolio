@@ -3,7 +3,16 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   /* config options here */
   images: {
-    domains: ['images.unsplash.com', 'yasas.dev'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'yasas.dev',
+      },
+    ],
     formats: ['image/webp', 'image/avif'],
   },
   compress: true,

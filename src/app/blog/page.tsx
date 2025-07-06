@@ -5,11 +5,11 @@ import Footer from '@/components/Footer';
 
 export const metadata: Metadata = {
   title: "Blog & Insights - Sajana Yasas",
-  description: "Read my latest insights on SEO, Physics, Web Development, Technology, and more. Expert analysis and practical tips from a Material Physics Researcher and SEO Expert.",
+  description: "Read my latest insights on AI, GEO, AIO, SEO, Startups, Physics, Web Development, Technology, and more. Expert analysis and practical tips from a Material Physics Researcher, Developer, and SEO Expert.",
   keywords: ["Blog", "SEO", "Physics", "Web Development", "Technology", "Insights", "Sajana Yasas"],
   openGraph: {
     title: "Blog & Insights - Sajana Yasas",
-    description: "Read my latest insights on SEO, Physics, Web Development, Technology, and more.",
+    description: "Read my latest insights on AI, GEO, AIO, SEO, Startups, Physics, Web Development, Technology, and more.",
     type: "website",
     images: [
       {
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Blog & Insights - Sajana Yasas",
-    description: "Read my latest insights on SEO, Physics, Web Development, Technology, and more.",
+    description: "Read my latest insights on AI, GEO, AIO, SEO, Startups, Physics, Web Development, Technology, and more.",
     images: ["/Sajana-yasas-me.png"],
   },
   alternates: {

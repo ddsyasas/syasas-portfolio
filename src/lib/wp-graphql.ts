@@ -142,6 +142,28 @@ export const GET_POST_BY_SLUG = gql`
   }
 `;
 
+export const GET_ALL_POSTS_FOR_SITEMAP = gql`
+  query GetAllPostsForSitemap {
+    posts(first: 1000) {
+      nodes {
+        slug
+        modified
+        date
+      }
+    }
+  }
+`;
+
+interface AllPostsResponse {
+  posts: {
+    nodes: {
+      slug: string;
+      modified: string;
+      date: string;
+    }[];
+  };
+}
+
 export async function fetchPostsAndCategories() {
   const data = await client.request(GET_POSTS_AND_CATEGORIES) as PostsResponse;
   return {
@@ -153,4 +175,9 @@ export async function fetchPostsAndCategories() {
 export async function fetchPostBySlug(slug: string) {
   const data = await client.request(GET_POST_BY_SLUG, { slug }) as PostResponse;
   return data.postBy;
+}
+
+export async function fetchAllPostsForSitemap() {
+  const data = await client.request(GET_ALL_POSTS_FOR_SITEMAP) as AllPostsResponse;
+  return data.posts.nodes;
 } 

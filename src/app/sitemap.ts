@@ -1,6 +1,7 @@
 import { MetadataRoute } from 'next'
+import { fetchAllPostsForSitemap } from '@/lib/wp-graphql'
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://yasas.dev'
   
   // Static pages
@@ -19,16 +20,20 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ]
 
-  // Note: For dynamic blog posts, you would fetch them from your WordPress API
-  // and add them to the sitemap. Here's an example structure:
-  
-  // const blogPosts = await fetchBlogPosts()
-  // const dynamicPages = blogPosts.map((post) => ({
-  //   url: `${baseUrl}/${post.slug}`,
-  //   lastModified: new Date(post.modified),
-  //   changeFrequency: 'monthly' as const,
-  //   priority: 0.6,
-  // }))
+  // Fetch all blog posts for dynamic pages
+  try {
+    const blogPosts = await fetchAllPostsForSitemap();
+    const dynamicPages = blogPosts.map((post) => ({
+      url: `${baseUrl}/${post.slug}`,
+      lastModified: new Date(post.modified || post.date),
+      changeFrequency: 'monthly' as const,
+      priority: 0.6,
+    }));
 
-  return [...staticPages]
+    return [...staticPages, ...dynamicPages];
+  } catch (error) {
+    console.error('Error fetching blog posts for sitemap:', error);
+    // Return only static pages if there's an error
+    return staticPages;
+  }
 } 

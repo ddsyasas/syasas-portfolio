@@ -48,7 +48,7 @@ const Hero = () => {
         
         <p className="text-muted-foreground text-lg max-w-3xl mx-auto mb-10 leading-relaxed">
           I&apos;m a material physics researcher exploring the science of tomorrow, 
-          an SEO expert at IDER Solutions helping brands dominate search, a 
+          an SEO,GEO,AIO,AEO expert at IDER Solutions helping brands dominate search, a 
           full-stack developer building web sites and web apps, and an indie 
           maker creating tools that fill digital market gaps.
         </p>

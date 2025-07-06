@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import PersonStructuredData, { WebsiteStructuredData } from "@/components/StructuredData";
@@ -14,29 +14,29 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Sajana Yasas - Physics Scholar | SEO Expert | Developer",
-  description: "Personal portfolio of Sajana Yasas - Material Physics Researcher, SEO Expert at IDER Solutions, Full-stack Developer, and Indie Maker",
-  keywords: ["Sajana Yasas", "Physics Researcher", "SEO Expert", "Full-stack Developer", "Material Physics", "IDER Solutions", "Portfolio"],
+  metadataBase: new URL('https://yasas.dev'),
+  title: "Sajana Yasas - Physics Scholar | SEO Expert | Developer | Indie Maker",
+  description: "Sajana Yasas - Material Physics Researcher, SEO Expert at IDER Solutions, Full-stack Developer, and Indie Maker",
+  keywords: ["Sajana Yasas", "Physics Researcher", "SEO Expert", "Full-stack Developer", "Material Physics", "IDER Solutions", "ddsyasas"],
   authors: [{ name: "Sajana Yasas" }],
   creator: "Sajana Yasas",
-  viewport: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no",
   openGraph: {
-    title: "Sajana Yasas - Physics Scholar | SEO Expert | Developer",
-    description: "Personal portfolio of Sajana Yasas - Material Physics Researcher, SEO Expert at IDER Solutions, Full-stack Developer, and Indie Maker",
+    title: "Sajana Yasas - Physics Scholar | SEO Expert | Developer | Indie Maker",
+    description: "Sajana Yasas - Material Physics Researcher, SEO Expert at IDER Solutions, Full-stack Developer, and Indie Maker",
     type: "website",
     images: [
       {
         url: "/Sajana-yasas-me.png",
         width: 1200,
         height: 630,
-        alt: "Sajana Yasas - Physics Scholar | SEO Expert | Developer",
+        alt: "Sajana Yasas - Physics Scholar | SEO Expert | Developer | Indie Maker",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Sajana Yasas - Physics Scholar | SEO Expert | Developer",
-    description: "Personal portfolio of Sajana Yasas - Material Physics Researcher, SEO Expert at IDER Solutions, Full-stack Developer, and Indie Maker",
+    title: "Sajana Yasas - Physics Scholar | SEO Expert | Developer | Indie Maker",
+    description: "Sajana Yasas - Material Physics Researcher, SEO Expert at IDER Solutions, Full-stack Developer, and Indie Maker",
     images: ["/Sajana-yasas-me.png"],
   },
   icons: {
@@ -52,6 +52,13 @@ export const metadata: Metadata = {
   alternates: {
     canonical: 'https://yasas.dev/',
   },
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 };
 
 const GA_MEASUREMENT_ID = "G-1NXVEK01VF";
@@ -111,8 +118,8 @@ export default function RootLayout({
       >
         <PersonStructuredData
           name="Sajana Yasas"
-          jobTitle="Material Physics Researcher | SEO Expert | Full-stack Developer"
-          description="Personal portfolio of Sajana Yasas - Material Physics Researcher, SEO Expert at IDER Solutions, Full-stack Developer, and Indie Maker"
+          jobTitle="Sajana Yasas - Physics Scholar | SEO Expert | Developer | Indie Maker"
+          description="Sajana Yasas - Material Physics Researcher, SEO Expert at IDER Solutions, Full-stack Developer, and Indie Maker"
           image="https://yasas.dev/Sajana-yasas-me.png"
           url="https://yasas.dev"
           sameAs={[
@@ -123,7 +130,7 @@ export default function RootLayout({
         />
         <WebsiteStructuredData
           name="Sajana Yasas - Portfolio"
-          description="Personal portfolio of Sajana Yasas - Material Physics Researcher, SEO Expert at IDER Solutions, Full-stack Developer, and Indie Maker"
+          description="Sajana Yasas - Material Physics Researcher, SEO Expert at IDER Solutions, Full-stack Developer, and Indie Maker"
           url="https://yasas.dev"
         />
         {children}

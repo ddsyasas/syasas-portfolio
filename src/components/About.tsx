@@ -60,15 +60,15 @@ const About = () => {
                 My academic journey in <span className="text-foreground font-semibold">Material Physics</span> sharpened my analytical 
                 thinking and introduced me to <span className="text-foreground font-semibold">Python</span>, which I now use both in 
                 scientific research and web-based product development. Outside 
-                the lab, I <span className="text-foreground font-semibold">lead SEO strategies at IDER Solutions</span>, helping businesses 
+                the lab, I <span className="text-foreground font-semibold">lead SEO, GEO, AIO, AEO strategies at IDER Solutions</span>, helping businesses 
                 grow through smarter content and search engine visibility.
               </p>
               
               <p>
                 I&apos;m also a self-driven developer — building websites, tools, and 
                 digital experiences that solve real-world problems. My work spans 
-                from user-friendly <span className="text-foreground font-semibold">WordPress and Shopify</span> sites to custom-coded 
-                platforms using <span className="text-foreground font-semibold">JavaScript, Tailwind CSS, React, and Next.js</span>.
+                from user-friendly <span className="text-foreground font-semibold">WP and Shopify</span> sites to custom-coded 
+                platforms using <span className="text-foreground font-semibold">JavaScript, Tailwind CSS, React, and Next.js to build web apps</span>.
               </p>
               
               <p>
