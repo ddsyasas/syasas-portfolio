@@ -64,7 +64,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       />
       <Navigation />
       <main className="py-20 px-6">
-        <article className="max-w-4xl mx-auto">
+        <article className="max-w-4xl mx-auto overflow-hidden">
           {/* Hero Section */}
           <div className="mb-12">
             <div className="relative h-96 rounded-xl overflow-hidden mb-8 shadow-2xl">
@@ -115,7 +115,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
           {/* Content */}
           {contentWithIds && (
-            <div className="prose prose-lg max-w-none prose-headings:text-foreground prose-p:text-muted-foreground prose-a:text-blue-600 prose-strong:text-foreground prose-code:text-foreground prose-pre:bg-muted prose-blockquote:border-l-blue-600 prose-img:rounded-lg prose-img:shadow-lg prose-table:border prose-table:border-border prose-th:border-border prose-td:border-border">
+            <div className="prose prose-lg max-w-none prose-headings:text-foreground prose-p:text-muted-foreground prose-a:text-blue-600 prose-strong:text-foreground prose-code:text-foreground prose-pre:bg-muted prose-blockquote:border-l-blue-600 prose-img:rounded-lg prose-img:shadow-lg prose-table:border prose-table:border-border prose-th:border-border prose-td:border-border overflow-hidden">
               <div 
                 dangerouslySetInnerHTML={{ __html: contentWithIds }}
                 className="[&>*:first-child]:mt-0 [&>*:last-child]:mb-0"
