@@ -92,12 +92,24 @@ const Insights = () => {
                     alt={post.title}
                     className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
                   />
-                  <div className="absolute bottom-4 left-4">
-                    <span className="bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-medium transition-transform duration-200 group-hover:scale-105">
+                  <div className="absolute bottom-4 left-4 right-4">
+                    <div className="flex flex-wrap gap-2">
                       {post.categories && Array.isArray(post.categories.nodes) && post.categories.nodes.length > 0
-                        ? post.categories.nodes[0].name
-                        : 'Uncategorized'}
-                    </span>
+                        ? post.categories.nodes.map((category, index) => (
+                            <span 
+                              key={category.id}
+                              className="bg-blue-600 text-white px-2 py-1 rounded-full text-xs font-medium transition-transform duration-200 group-hover:scale-105"
+                            >
+                              {category.name}
+                            </span>
+                          ))
+                        : (
+                            <span className="bg-blue-600 text-white px-2 py-1 rounded-full text-xs font-medium transition-transform duration-200 group-hover:scale-105">
+                              Uncategorized
+                            </span>
+                          )
+                      }
+                    </div>
                   </div>
                 </div>
                 <div className="p-6 flex flex-col h-full">

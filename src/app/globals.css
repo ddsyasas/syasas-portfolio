@@ -485,6 +485,17 @@ html {
     font-size: 0.8rem;
     line-height: 1.4;
   }
+
+  /* Category tags mobile improvements */
+  .absolute.bottom-4.left-4.right-4 .flex.flex-wrap.gap-2 {
+    max-width: calc(100% - 2rem);
+  }
+
+  .absolute.bottom-4.left-4.right-4 .flex.flex-wrap.gap-2 span {
+    font-size: 0.7rem;
+    padding: 0.25rem 0.5rem;
+    line-height: 1;
+  }
 }
 
 .dark .bg-card {
