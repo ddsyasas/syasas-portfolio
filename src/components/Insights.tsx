@@ -95,7 +95,7 @@ const Insights = () => {
                   <div className="absolute bottom-4 left-4 right-4">
                     <div className="flex flex-wrap gap-2">
                       {post.categories && Array.isArray(post.categories.nodes) && post.categories.nodes.length > 0
-                        ? post.categories.nodes.map((category, index) => (
+                        ? post.categories.nodes.map((category) => (
                             <span 
                               key={category.id}
                               className="bg-blue-600 text-white px-2 py-1 rounded-full text-xs font-medium transition-transform duration-200 group-hover:scale-105"
