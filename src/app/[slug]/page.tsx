@@ -9,8 +9,7 @@ import { stripHtml, injectHeadingIds } from '@/lib/utils';
 import type { Metadata } from 'next';
 import ArticleStructuredData from '@/components/ArticleStructuredData';
 
-interface Category {
-  id: number;
+interface WordPressEmbeddedTerm {
   name: string;
   slug: string;
 }
@@ -66,7 +65,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         publishedDate={post.date}
         modifiedDate={post.modified || post.date}
         author="Sajana Yasas"
-        categories={post._embedded?.['wp:term']?.[0]?.map((cat: any) => cat.name) || []}
+        categories={post._embedded?.['wp:term']?.[0]?.map((cat: WordPressEmbeddedTerm) => cat.name) || []}
       />
       <Navigation />
       <main className="py-20 px-6">
@@ -82,9 +81,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
               <div className="absolute bottom-6 left-6 right-6">
                 <div className="flex flex-wrap gap-2 mb-4">
-                  {post._embedded?.['wp:term']?.[0] && Array.isArray(post._embedded['wp:term'][0]) && post._embedded['wp:term'][0].map((category: any) => (
+                  {post._embedded?.['wp:term']?.[0] && Array.isArray(post._embedded['wp:term'][0]) && post._embedded['wp:term'][0].map((category: WordPressEmbeddedTerm, index: number) => (
                     <span 
-                      key={category.id}
+                      key={`${category.slug}-${index}`}
                       className="bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-medium"
                     >
                       {category.name}
@@ -137,9 +136,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                 <h3 className="text-lg font-semibold text-foreground">Categories</h3>
               </div>
               <div className="flex flex-wrap gap-2">
-                {post._embedded['wp:term'][0].map((category: any) => (
+                {post._embedded['wp:term'][0].map((category: WordPressEmbeddedTerm, index: number) => (
                   <span 
-                    key={category.id}
+                    key={`${category.slug}-${index}`}
                     className="bg-muted text-muted-foreground px-3 py-1 rounded-full text-sm border border-border hover:bg-accent transition-colors"
                   >
                     {category.name}
@@ -182,7 +181,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       title: `${post.title.rendered} - Sajana Yasas`,
       description,
       keywords: [
-        ...post._embedded?.['wp:term']?.[0]?.map((cat: any) => cat.name) || [],
+        ...post._embedded?.['wp:term']?.[0]?.map((cat: WordPressEmbeddedTerm) => cat.name) || [],
         'Sajana Yasas',
         'Blog',
         'Physics',

@@ -7,6 +7,11 @@ import { useRouter } from 'next/navigation';
 import { wordpressAPI, WordPressPost } from '@/lib/wordpress';
 import Link from 'next/link';
 
+interface WordPressEmbeddedTerm {
+  name: string;
+  slug: string;
+}
+
 const Insights = () => {
   const [posts, setPosts] = useState<WordPressPost[]>([]);
   const [loading, setLoading] = useState(true);
@@ -73,9 +78,9 @@ const Insights = () => {
                   <div className="absolute bottom-4 left-4 right-4">
                     <div className="flex flex-wrap gap-2">
                       {post._embedded?.['wp:term']?.[0] && Array.isArray(post._embedded['wp:term'][0]) && post._embedded['wp:term'][0].length > 0
-                        ? post._embedded['wp:term'][0].map((category: any) => (
+                        ? post._embedded['wp:term'][0].map((category: WordPressEmbeddedTerm, index: number) => (
                             <span 
-                              key={category.id}
+                              key={`${category.slug}-${index}`}
                               className="bg-blue-600 text-white px-2 py-1 rounded-full text-xs font-medium transition-transform duration-200 group-hover:scale-105"
                             >
                               {category.name}

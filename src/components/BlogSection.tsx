@@ -7,6 +7,11 @@ import Link from 'next/link';
 import { wordpressAPI, WordPressPost, Category } from '@/lib/wordpress';
 import { stripHtml } from '@/lib/utils';
 
+interface WordPressEmbeddedTerm {
+  name: string;
+  slug: string;
+}
+
 const BlogSection = () => {
   const [activeFilter, setActiveFilter] = useState('All');
   const [visibleCards, setVisibleCards] = useState(6);
@@ -50,7 +55,7 @@ const BlogSection = () => {
     ? posts
     : posts.filter(post => {
         if (!post._embedded?.['wp:term']?.[0]) return false;
-        return post._embedded['wp:term'][0].some((cat: any) => cat.name === activeFilter);
+        return post._embedded['wp:term'][0].some((cat: WordPressEmbeddedTerm) => cat.name === activeFilter);
       });
 
   const displayedPosts = filteredPosts.slice(0, visibleCards);
@@ -106,7 +111,7 @@ const BlogSection = () => {
               const postCount = filter === 'All' 
                 ? posts.length 
                 : posts.filter(post => 
-                    post._embedded?.['wp:term']?.[0]?.some((cat: any) => cat.name === filter)
+                    post._embedded?.['wp:term']?.[0]?.some((cat: WordPressEmbeddedTerm) => cat.name === filter)
                   ).length;
               
               return (
@@ -156,9 +161,9 @@ const BlogSection = () => {
                   <div className="absolute bottom-4 left-4 right-4">
                     <div className="flex flex-wrap gap-2">
                       {post._embedded?.['wp:term']?.[0] && Array.isArray(post._embedded['wp:term'][0]) && post._embedded['wp:term'][0].length > 0
-                        ? post._embedded['wp:term'][0].map((category: any) => (
+                        ? post._embedded['wp:term'][0].map((category: WordPressEmbeddedTerm, index: number) => (
                             <span 
-                              key={category.id}
+                              key={`${category.slug}-${index}`}
                               className="bg-blue-600 text-white px-2 py-1 rounded-full text-xs font-medium transition-transform duration-200 group-hover:scale-105"
                             >
                               {category.name}
