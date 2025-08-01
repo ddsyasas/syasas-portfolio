@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { fetchPostBySlug } from '@/lib/wp-graphql';
+import { wordpressAPI, WordPressPost } from '@/lib/wordpress';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import ShareButtons from '@/components/ShareButtons';
@@ -10,7 +10,7 @@ import type { Metadata } from 'next';
 import ArticleStructuredData from '@/components/ArticleStructuredData';
 
 interface Category {
-  id: string;
+  id: number;
   name: string;
   slug: string;
 }
@@ -23,13 +23,19 @@ interface BlogPostPageProps {
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const { slug } = await params;
-  const post = await fetchPostBySlug(slug);
-
-  if (!post) {
+  let post: WordPressPost;
+  
+  try {
+    post = await wordpressAPI.getPost(slug);
+    if (!post) {
+      notFound();
+    }
+  } catch (error) {
+    console.error('Error fetching post:', error);
     notFound();
   }
 
-  const featuredImage = post.featuredImage?.node?.sourceUrl ||
+  const featuredImage = post._embedded?.['wp:featuredmedia']?.[0]?.source_url ||
     'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=800&h=400&fit=crop';
 
   const getReadTime = (content: string) => {
@@ -48,19 +54,19 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   };
 
   // Inject heading IDs into the content
-  const contentWithIds = injectHeadingIds(post.content);
+  const contentWithIds = injectHeadingIds(post.content.rendered);
 
   return (
     <div className="min-h-screen bg-background">
       <ArticleStructuredData
-        title={post.title}
-        description={stripHtml(post.content).substring(0, 160)}
+        title={post.title.rendered}
+        description={stripHtml(post.content.rendered).substring(0, 160)}
         image={featuredImage}
         url={`https://yasas.dev/${post.slug}`}
         publishedDate={post.date}
         modifiedDate={post.modified || post.date}
         author="Sajana Yasas"
-        categories={post.categories?.nodes?.map((cat: Category) => cat.name) || []}
+        categories={post._embedded?.['wp:term']?.[0]?.map((cat: any) => cat.name) || []}
       />
       <Navigation />
       <main className="py-20 px-6">
@@ -70,13 +76,13 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             <div className="relative h-96 rounded-xl overflow-hidden mb-8 shadow-2xl">
               <img 
                 src={featuredImage}
-                alt={post.title}
+                alt={post.title.rendered}
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
               <div className="absolute bottom-6 left-6 right-6">
                 <div className="flex flex-wrap gap-2 mb-4">
-                  {post.categories && Array.isArray(post.categories.nodes) && post.categories.nodes.map((category: Category) => (
+                  {post._embedded?.['wp:term']?.[0] && Array.isArray(post._embedded['wp:term'][0]) && post._embedded['wp:term'][0].map((category: any) => (
                     <span 
                       key={category.id}
                       className="bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-medium"
@@ -89,7 +95,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             </div>
             
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-6 leading-tight">
-              {post.title}
+              {post.title.rendered}
             </h1>
             
             <div className="flex flex-wrap items-center gap-6 text-muted-foreground mb-8">
@@ -99,7 +105,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               </div>
               <div className="flex items-center gap-2">
                 <Clock size={16} />
-                <span>{getReadTime(post.content)}</span>
+                <span>{getReadTime(post.content.rendered)}</span>
               </div>
               <div className="flex items-center gap-2">
                 <User size={16} />
@@ -124,14 +130,14 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           )}
 
           {/* Tags Section */}
-          {post.categories && Array.isArray(post.categories.nodes) && post.categories.nodes.length > 0 && (
+          {post._embedded?.['wp:term']?.[0] && Array.isArray(post._embedded['wp:term'][0]) && post._embedded['wp:term'][0].length > 0 && (
             <div className="mt-12 pt-8 border-t border-border">
               <div className="flex items-center gap-2 mb-4">
                 <Tag size={20} className="text-muted-foreground" />
                 <h3 className="text-lg font-semibold text-foreground">Categories</h3>
               </div>
               <div className="flex flex-wrap gap-2">
-                {post.categories.nodes.map((category: Category) => (
+                {post._embedded['wp:term'][0].map((category: any) => (
                   <span 
                     key={category.id}
                     className="bg-muted text-muted-foreground px-3 py-1 rounded-full text-sm border border-border hover:bg-accent transition-colors"
@@ -144,7 +150,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           )}
 
           {/* Share Section */}
-          <ShareButtons title={post.title} url={`https://yasas.dev/${post.slug}`} />
+          <ShareButtons title={post.title.rendered} url={`https://yasas.dev/${post.slug}`} />
         </article>
       </main>
       <Footer />
@@ -154,56 +160,67 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  const post = await fetchPostBySlug(slug);
+  
+  try {
+    const post = await wordpressAPI.getPost(slug);
 
-  if (!post) {
+    if (!post) {
+      return {
+        title: 'Post Not Found - Sajana Yasas',
+        description: 'The requested blog post could not be found.',
+      };
+    }
+
+    const strippedContent = stripHtml(post.content.rendered);
+    const description = strippedContent.length > 160 
+      ? strippedContent.substring(0, 157) + '...' 
+      : strippedContent;
+
+    const featuredImage = post._embedded?.['wp:featuredmedia']?.[0]?.source_url || '/Sajana-yasas-me.png';
+
+    return {
+      title: `${post.title.rendered} - Sajana Yasas`,
+      description,
+      keywords: [
+        ...post._embedded?.['wp:term']?.[0]?.map((cat: any) => cat.name) || [],
+        'Sajana Yasas',
+        'Blog',
+        'Physics',
+        'SEO',
+        'Web Development'
+      ],
+      openGraph: {
+        title: post.title.rendered,
+        description,
+        type: 'article',
+        url: `https://yasas.dev/${post.slug}`,
+        images: [
+          {
+            url: featuredImage,
+            width: 1200,
+            height: 630,
+            alt: post.title.rendered,
+          },
+        ],
+        publishedTime: post.date,
+        modifiedTime: post.modified,
+        authors: ['Sajana Yasas'],
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: post.title.rendered,
+        description,
+        images: [featuredImage],
+      },
+      alternates: {
+        canonical: `https://yasas.dev/${post.slug}`,
+      },
+    };
+  } catch (error) {
+    console.error('Error generating metadata:', error);
     return {
       title: 'Post Not Found - Sajana Yasas',
       description: 'The requested blog post could not be found.',
     };
   }
-
-  const strippedContent = stripHtml(post.content);
-  const description = strippedContent.length > 160 
-    ? strippedContent.substring(0, 157) + '...' 
-    : strippedContent;
-
-  return {
-    title: `${post.title} - Sajana Yasas`,
-    description,
-    keywords: [
-      ...post.categories?.nodes?.map((cat: Category) => cat.name) || [],
-      'Sajana Yasas',
-      'Blog',
-      'Physics',
-      'SEO',
-      'Web Development'
-    ],
-    openGraph: {
-      title: post.title,
-      description,
-      type: 'article',
-      url: `https://yasas.dev/${post.slug}`,
-      images: [
-        {
-          url: post.featuredImage?.node?.sourceUrl || '/Sajana-yasas-me.png',
-          width: 1200,
-          height: 630,
-          alt: post.title,
-        },
-      ],
-      publishedTime: post.date,
-      modifiedTime: post.modified,
-      authors: ['Sajana Yasas'],
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: post.title,
-      description,
-      images: [post.featuredImage?.node?.sourceUrl || '/Sajana-yasas-me.png'],
-    },
-    alternates: {
-      canonical: `https://yasas.dev/${post.slug}`,
-    },
-  };
 } 

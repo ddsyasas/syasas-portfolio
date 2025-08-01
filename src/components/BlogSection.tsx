@@ -4,36 +4,13 @@ import React, { useState, useEffect } from 'react';
 import { ArrowRight, ChevronDown } from 'lucide-react';
 import { Button } from './button';
 import Link from 'next/link';
-import { fetchPostsAndCategories } from '@/lib/wp-graphql';
+import { wordpressAPI, WordPressPost, Category } from '@/lib/wordpress';
 import { stripHtml } from '@/lib/utils';
-
-interface Category {
-  id: string;
-  name: string;
-  slug: string;
-  count?: number;
-}
-
-interface Post {
-  id: string;
-  title: string;
-  slug: string;
-  date: string;
-  excerpt: string;
-  content: string;
-  categories: { nodes: Category[] };
-  featuredImage?: {
-    node: {
-      sourceUrl: string;
-      altText: string;
-    } | null;
-  };
-}
 
 const BlogSection = () => {
   const [activeFilter, setActiveFilter] = useState('All');
   const [visibleCards, setVisibleCards] = useState(6);
-  const [posts, setPosts] = useState<Post[]>([]);
+  const [posts, setPosts] = useState<WordPressPost[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -41,10 +18,23 @@ const BlogSection = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const { posts, categories } = await fetchPostsAndCategories();
-        setPosts(Array.isArray(posts) ? posts : []);
-        setCategories(Array.isArray(categories) ? categories : []);
-      } catch {
+        const [postsData, categoriesData] = await Promise.all([
+          wordpressAPI.getPosts({ per_page: 100 }), // Increased to get more posts
+          wordpressAPI.getCategories()
+        ]);
+        setPosts(Array.isArray(postsData) ? postsData : []);
+        // Show all categories, including those with no posts (so user can see all available categories)
+        const filteredCategories = Array.isArray(categoriesData) 
+          ? categoriesData.filter(cat => 
+              cat.name && 
+              cat.name !== 'Uncategorized' && 
+              cat.name.toLowerCase() !== 'uncategorized'
+            )
+          : [];
+        
+        setCategories(filteredCategories);
+      } catch (error) {
+        console.error('Error fetching WordPress data:', error);
         setPosts([]);
         setCategories([]);
       } finally {
@@ -58,9 +48,10 @@ const BlogSection = () => {
 
   const filteredPosts = activeFilter === 'All'
     ? posts
-    : posts.filter(post =>
-        post.categories.nodes.some(cat => cat.name === activeFilter)
-      );
+    : posts.filter(post => {
+        if (!post._embedded?.['wp:term']?.[0]) return false;
+        return post._embedded['wp:term'][0].some((cat: any) => cat.name === activeFilter);
+      });
 
   const displayedPosts = filteredPosts.slice(0, visibleCards);
   const hasMoreCards = visibleCards < filteredPosts.length;
@@ -74,8 +65,8 @@ const BlogSection = () => {
     setVisibleCards(6);
   };
 
-  const getFeaturedImage = (post: Post) => {
-    return post.featuredImage?.node?.sourceUrl ||
+  const getFeaturedImage = (post: WordPressPost) => {
+    return post._embedded?.['wp:featuredmedia']?.[0]?.source_url ||
       'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=400&h=250&fit=crop';
   };
 
@@ -102,20 +93,46 @@ const BlogSection = () => {
             Explore my thoughts and insights on SEO, Physics, Development, Technology, and more
           </p>
         </div>
-        <div className="flex flex-wrap justify-center gap-4 mb-12">
-          {filters.map((filter) => (
-            <button
-              key={filter}
-              onClick={() => handleFilterChange(filter)}
-              className={`px-6 py-2 rounded-full transition-all duration-300 ${
-                activeFilter === filter
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-card text-muted-foreground hover:bg-accent'
-              }`}
-            >
-              {filter}
-            </button>
-          ))}
+        {/* Enhanced Category Filters */}
+        <div className="mb-12">
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-xl font-semibold text-foreground">Filter by Category</h3>
+            <span className="text-sm text-muted-foreground">
+              {filteredPosts.length} post{filteredPosts.length !== 1 ? 's' : ''} found
+            </span>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            {filters.map((filter) => {
+              const postCount = filter === 'All' 
+                ? posts.length 
+                : posts.filter(post => 
+                    post._embedded?.['wp:term']?.[0]?.some((cat: any) => cat.name === filter)
+                  ).length;
+              
+              return (
+                <button
+                  key={filter}
+                  onClick={() => handleFilterChange(filter)}
+                  className={`group relative px-2 py-1 sm:px-4 sm:py-2 text-sm sm:text-base rounded-lg border transition-all duration-300 ${
+                    activeFilter === filter
+                      ? 'bg-blue-600 text-white border-blue-600 shadow-lg'
+                      : 'bg-card text-muted-foreground border-border hover:bg-accent hover:text-foreground hover:border-blue-300'
+                  }`}
+                >
+                  <span className="flex items-center gap-1 sm:gap-2">
+                    {filter}
+                    <span className={`text-xs px-0.4 py-0.5 sm:px-2 rounded-full ${
+                      activeFilter === filter
+                        ? 'bg-blue-500/30 text-blue-100'
+                        : 'bg-muted text-muted-foreground group-hover:bg-accent group-hover:text-foreground'
+                    }`}>
+                      {postCount}
+                    </span>
+                  </span>
+                </button>
+              );
+            })}
+          </div>
         </div>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
           {displayedPosts.map((post) => (
@@ -128,18 +145,18 @@ const BlogSection = () => {
                 className="bg-card/70 rounded-lg overflow-hidden border border-border/50 hover:border-blue-500/50 transition-all duration-300 hover:transform hover:scale-105 group cursor-pointer hover:shadow-xl active:scale-95 focus-visible:outline-2 focus-visible:outline-blue-500 focus-visible:outline-offset-2"
                 tabIndex={0}
                 role="button"
-                aria-label={`Read article: ${post.title}`}
+                aria-label={`Read article: ${post.title.rendered}`}
               >
                 <div className="relative overflow-hidden">
                   <img 
                     src={getFeaturedImage(post)}
-                    alt={post.title}
+                    alt={post.title.rendered}
                     className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
                   />
                   <div className="absolute bottom-4 left-4 right-4">
                     <div className="flex flex-wrap gap-2">
-                      {post.categories && Array.isArray(post.categories.nodes) && post.categories.nodes.length > 0
-                        ? post.categories.nodes.map((category) => (
+                      {post._embedded?.['wp:term']?.[0] && Array.isArray(post._embedded['wp:term'][0]) && post._embedded['wp:term'][0].length > 0
+                        ? post._embedded['wp:term'][0].map((category: any) => (
                             <span 
                               key={category.id}
                               className="bg-blue-600 text-white px-2 py-1 rounded-full text-xs font-medium transition-transform duration-200 group-hover:scale-105"
@@ -167,10 +184,10 @@ const BlogSection = () => {
                   <h3 
                     className="text-xl font-semibold text-foreground mb-2 leading-tight group-hover:text-blue-300 transition-colors line-clamp-2"
                   >
-                    {post.title}
+                    {post.title.rendered}
                   </h3>
                   <p className="text-muted-foreground mb-4 leading-relaxed line-clamp-2">
-                    {stripHtml(post.excerpt)}
+                    {stripHtml(post.excerpt.rendered)}
                   </p>
                   <div className="flex items-center text-blue-400 group-hover:text-blue-300 transition-colors mt-auto">
                     <span className="text-sm font-medium">Read More</span>

@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next'
-import { fetchAllPostsForSitemap } from '@/lib/wp-graphql'
+import { wordpressAPI } from '@/lib/wordpress'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://yasas.dev'
@@ -22,7 +22,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Fetch all blog posts for dynamic pages
   try {
-    const blogPosts = await fetchAllPostsForSitemap();
+    const blogPosts = await wordpressAPI.getPosts({ per_page: 100 });
     const dynamicPages = blogPosts.map((post) => ({
       url: `${baseUrl}/${post.slug}`,
       lastModified: new Date(post.modified || post.date),

@@ -4,34 +4,11 @@ import React, { useEffect, useState } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { Button } from './button';
 import { useRouter } from 'next/navigation';
-import { fetchPostsAndCategories } from '@/lib/wp-graphql';
+import { wordpressAPI, WordPressPost } from '@/lib/wordpress';
 import Link from 'next/link';
 
-interface Category {
-  id: string;
-  name: string;
-  slug: string;
-  count?: number;
-}
-
-interface Post {
-  id: string;
-  title: string;
-  slug: string;
-  date: string;
-  excerpt: string;
-  content: string;
-  categories: { nodes: Category[] };
-  featuredImage?: {
-    node: {
-      sourceUrl: string;
-      altText: string;
-    } | null;
-  };
-}
-
 const Insights = () => {
-  const [posts, setPosts] = useState<Post[]>([]);
+  const [posts, setPosts] = useState<WordPressPost[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
@@ -39,9 +16,10 @@ const Insights = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const { posts } = await fetchPostsAndCategories();
-        setPosts(Array.isArray(posts) ? posts.slice(0, 3) : []); // Show only latest 3
-      } catch {
+        const postsData = await wordpressAPI.getPosts({ per_page: 3 });
+        setPosts(Array.isArray(postsData) ? postsData : []); // Show only latest 3
+      } catch (error) {
+        console.error('Error fetching WordPress data:', error);
         setPosts([]);
       } finally {
         setLoading(false);
@@ -84,18 +62,18 @@ const Insights = () => {
                 className="bg-card/70 rounded-lg overflow-hidden border border-border/50 hover:border-blue-500/50 transition-all duration-300 hover:transform hover:scale-105 group cursor-pointer hover:shadow-xl active:scale-95 focus-visible:outline-2 focus-visible:outline-blue-500 focus-visible:outline-offset-2"
                 tabIndex={0}
                 role="button"
-                aria-label={`Read article: ${post.title}`}
+                aria-label={`Read article: ${post.title.rendered}`}
               >
                 <div className="relative overflow-hidden">
                   <img 
-                    src={post.featuredImage?.node?.sourceUrl || 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=400&h=250&fit=crop'}
-                    alt={post.title}
+                    src={post._embedded?.['wp:featuredmedia']?.[0]?.source_url || 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=400&h=250&fit=crop'}
+                    alt={post.title.rendered}
                     className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
                   />
                   <div className="absolute bottom-4 left-4 right-4">
                     <div className="flex flex-wrap gap-2">
-                      {post.categories && Array.isArray(post.categories.nodes) && post.categories.nodes.length > 0
-                        ? post.categories.nodes.map((category) => (
+                      {post._embedded?.['wp:term']?.[0] && Array.isArray(post._embedded['wp:term'][0]) && post._embedded['wp:term'][0].length > 0
+                        ? post._embedded['wp:term'][0].map((category: any) => (
                             <span 
                               key={category.id}
                               className="bg-blue-600 text-white px-2 py-1 rounded-full text-xs font-medium transition-transform duration-200 group-hover:scale-105"
@@ -121,11 +99,11 @@ const Insights = () => {
                     })}</span>
                   </div>
                   <h3 className="text-xl font-semibold text-foreground mb-2 leading-tight group-hover:text-blue-300 transition-colors line-clamp-2">
-                    {post.title}
+                    {post.title.rendered}
                   </h3>
                   <p 
                     className="text-muted-foreground mb-4 leading-relaxed line-clamp-2"
-                    dangerouslySetInnerHTML={{ __html: post.excerpt }}
+                    dangerouslySetInnerHTML={{ __html: post.excerpt.rendered }}
                   />
                   <div className="flex items-center text-blue-400 group-hover:text-blue-300 transition-colors mt-auto">
                     <span className="text-sm font-medium">Read More</span>

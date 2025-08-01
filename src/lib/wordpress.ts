@@ -7,6 +7,7 @@ const WORDPRESS_APP_PASSWORD = process.env.WORDPRESS_APP_PASSWORD || '';
 export interface WordPressPost {
   id: number;
   date: string;
+  modified: string;
   title: {
     rendered: string;
   };
@@ -89,13 +90,14 @@ class WordPressAPI {
 
   async getCategories(): Promise<Category[]> {
     try {
-      const response = await axios.get(`${this.apiUrl.replace('/posts', '/categories')}`, {
+      const response = await axios.get(`${this.apiUrl}/categories`, {
         headers: {
           'Authorization': this.auth,
         },
       });
       return response.data;
     } catch (error) {
+      console.error('Error fetching categories:', error);
       throw error;
     }
   }
