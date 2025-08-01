@@ -9,6 +9,9 @@ import { stripHtml, injectHeadingIds } from '@/lib/utils';
 import type { Metadata } from 'next';
 import ArticleStructuredData from '@/components/ArticleStructuredData';
 
+// Revalidate blog posts every 10 minutes to pick up new posts and changes
+export const revalidate = 600;
+
 interface WordPressEmbeddedTerm {
   name: string;
   slug: string;

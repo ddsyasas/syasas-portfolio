@@ -1,6 +1,9 @@
 import { MetadataRoute } from 'next'
 import { wordpressAPI } from '@/lib/wordpress'
 
+// Revalidate sitemap every hour to pick up new blog posts
+export const revalidate = 600
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://yasas.dev'
   
